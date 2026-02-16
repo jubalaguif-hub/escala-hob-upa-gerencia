@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Escalas — Técnicos de Enfermagem</title>
+
+  <link rel="stylesheet" href="./styles.css" />
+
+  <!-- XLSX opcional (se estiver sem internet, use CSV normalmente) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="no-print">
+      <div class="title">
+        <h1>📋 Escalas — Técnicos de Enfermagem</h1>
+        <div class="sub">
+          4 escalas fixas • dias livres • rodízio contínuo • ocorrências por período • 30h/40h (ciclo) • exportação
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <span class="pill">
+          <span>🗓️</span>
+          <select id="monthSel"></select>
+          <select id="yearSel"></select>
+        </span>
+
+        <button class="btn primary" id="btnPrint">🖨️ Imprimir / PDF</button>
+        <button class="btn" id="btnExportCSV">📄 CSV</button>
+        <button class="btn" id="btnExportXLSX">📊 XLSX</button>
+
+        <button class="btn danger" id="btnResetMonth">🧨 Resetar mês (escala)</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- LEFT -->
+      <aside class="card left-panel no-print">
+        <div class="hd">
+          <h2>📌 Menu</h2>
+          <span class="muted" id="saveState">Salvo ✅</span>
+        </div>
+        <div class="bd stack">
+          <div class="nav" id="nav"></div>
+
+          <section id="viewScales" class="stack"></section>
+          <section id="viewTechs" class="stack" style="display:none"></section>
+          <section id="viewOcc" class="stack" style="display:none"></section>
+          <section id="viewSummary" class="stack" style="display:none"></section>
+        </div>
+      </aside>
+
+      <!-- RIGHT -->
+      <main class="card">
+        <div class="hd">
+          <h2 id="tableTitle">Escala</h2>
+          <div class="muted" id="tableMeta"></div>
+        </div>
+        <div class="bd">
+          <div class="table-wrap" id="tableWrap"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL: editar célula -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="mh">
+        <div class="t">
+          <h3 id="modalTitle">Editar</h3>
+          <p class="sm" id="modalSub"></p>
+        </div>
+        <button class="btn" id="btnClose">✖ Fechar</button>
+      </div>
+
+      <div class="mb">
+        <div class="grid2">
+          <div class="stack">
+            <div class="row">
+              <input id="nameInput" list="techDatalist" placeholder="Nome do técnico (cadastro)" style="flex:1;min-width:220px">
+              <datalist id="techDatalist"></datalist>
+
+              <select id="covSel" style="min-width:160px">
+                <option value="NORMAL">NORMAL</option>
+                <option value="EXTRA">EXTRA</option>
+              </select>
+
+              <button class="btn primary" id="btnAddManual">➕ Inserir</button>
+            </div>
+
+            <div class="note" id="manualNote"></div>
+            <div class="list" id="slotList"></div>
+          </div>
+
+          <div class="stack">
+            <div class="note">
+              <b>Regras:</b><br>
+              • Ocorrência ativa bloqueia (manual e automático).<br>
+              • NORMAL: não repete no mesmo dia (em nenhuma escala).<br>
+              • EXTRA: permite no mesmo dia apenas no turno oposto (DIA ↔ NOITE).<br>
+              • Ciclo 30/40h: no manual pode forçar com aviso.
+            </div>
+
+            <div class="row" style="justify-content:flex-end">
+              <button class="btn danger" id="btnClearCell">🧹 Limpar setor no dia</button>
+              <button class="btn primary" id="btnDone">✅ Concluir</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mf">
+        <button class="btn" id="btnAutoFillHere">⚡ Distribuir neste dia</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: distribuição automática -->
+  <div class="overlay" id="overlayAuto" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="mh">
+        <div class="t">
+          <h3>⚡ Distribuição Automática</h3>
+          <p class="sm" id="autoSub"></p>
+        </div>
+        <button class="btn" id="btnCloseAuto">✖ Fechar</button>
+      </div>
+
+      <div class="mb stack">
+        <div class="note">
+          Rodízio é <b>contínuo no mês</b>. Automático respeita <b>ocorrências</b>, <b>duplicidade</b> e <b>ciclo 30/40h</b> (sem forçar).
+          Se faltar gente, deixa em branco.
+        </div>
+
+        <div class="pill2">
+          <b>Modo:</b>
+          <label class="inline">
+            <input type="radio" name="autofillMode" value="FILL_EMPTY" checked>
+            <span>Preencher slots vazios</span>
+          </label>
+          <label class="inline">
+            <input type="radio" name="autofillMode" value="CLEAR_AND_FILL">
+            <span>Apagar e redistribuir</span>
+          </label>
+        </div>
+
+        <div class="row" style="justify-content:flex-end">
+          <button class="btn primary" id="btnRunAuto">🚀 Executar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./engine.js"></script>
+</body>
+</html>
