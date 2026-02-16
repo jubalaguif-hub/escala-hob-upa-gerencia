@@ -132,19 +132,26 @@ let activeYear  = new Date().getFullYear();
 
 function ensureMonthData(scaleId, y, m){
   const ym = ymKey(y,m);
-  state.data[scaleId] ||= {};
-  state.data[scaleId][ym] ||= {
-    sectorsSnapshot: null,
-    selectedDays: [],
-    pointer: 0,
-    days: {}
-  };
-  const md = state.data[scaleId][ym];
-  if(!md.sectorsSnapshot){
-    md.sectorsSnapshot = getScale(scaleId).sectors.map(s => ({...s}));
+
+  // garante estrutura base
+  if(!state.data) state.data = {};
+  if(!state.data[scaleId]) state.data[scaleId] = {};
+
+  if(!state.data[scaleId][ym]){
+    state.data[scaleId][ym] = {
+      sectorsSnapshot: getScale(scaleId).sectors.map(s => ({...s})),
+      selectedDays: [],
+      pointer: 0,
+      days: {}
+    };
   }
-  return { ym, md };
+
+  return {
+    ym,
+    md: state.data[scaleId][ym]
+  };
 }
+
 
 function ensureDaySectorSlots(md, day, sector){
   md.days[String(day)] ||= {};
