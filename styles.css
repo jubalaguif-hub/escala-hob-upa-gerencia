@@ -313,3 +313,155 @@ th:first-child, td:first-child{border-left:1px solid var(--line)}
   th,td{font-size:10px !important; padding:6px 6px !important;}
   .slot .name{font-size:10px !important;}
 }
+/* ============================
+   TABELA MAIS PROFISSIONAL
+============================ */
+
+.table-wrap table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+.table-wrap th {
+  background: #1e293b;
+  color: #ffffff;
+  padding: 8px;
+  text-align: center;
+  font-weight: 700;
+  border: 1px solid #334155;
+}
+
+.table-wrap td {
+  border: 1px solid #334155;
+  vertical-align: top;
+  padding: 4px;
+}
+
+.cell {
+  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.slot {
+  padding: 4px 6px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.slot.empty {
+  background: rgba(255,255,255,0.02);
+  color: #64748b;
+  font-style: italic;
+}
+
+/* destaque se faltar pessoa */
+.warn-missing {
+  box-shadow: inset 0 0 0 2px rgba(255, 170, 0, 0.3);
+}
+
+/* ============================
+   CABEÇALHO MAIS VISÍVEL
+============================ */
+
+#tableTitle {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+#tableMeta {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 10px;
+}
+
+/* ============================
+   MELHORIA DOS DIAS
+============================ */
+
+.day-meta {
+  font-weight: 700;
+  text-align: center;
+}
+
+.day-meta .dow {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* ============================
+   BADGE EXTRA MAIS DISCRETA
+============================ */
+
+.badge.extra {
+  background: #2563eb;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 4px;
+}
+
+/* ============================
+   IMPRESSÃO PROFISSIONAL
+============================ */
+
+@media print {
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .tabs,
+  .stack,
+  .note,
+  .btn,
+  .mini-btn,
+  #nav,
+  #overlay,
+  #overlayAuto,
+  #btnExportCSV,
+  #btnExportXLSX,
+  #btnResetMonth {
+    display: none !important;
+  }
+
+  #tableTitle {
+    font-size: 18px;
+    color: black;
+  }
+
+  #tableMeta {
+    color: black;
+  }
+
+  .table-wrap table {
+    font-size: 12px;
+  }
+
+  .table-wrap th {
+    background: #e2e8f0 !important;
+    color: black !important;
+  }
+
+  .slot {
+    background: white !important;
+    border: none;
+    padding: 2px 0;
+  }
+
+  .badge.extra {
+    display: none !important; /* não mostrar EXTRA na impressão */
+  }
+
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+}
